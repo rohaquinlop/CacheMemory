@@ -13,7 +13,15 @@ def interfaz(cache, mainMemo):
     opt = input("Digite su opción: ")
 
     for c in cache.content:
-      print("|{}|{}|".format(c[0].dirty+" "+c[0].tag, c[1].dirty+" "+c[1].tag))
+      print("|{}|{}|".format(c[0].dirty+" "+c[0].tag + " "+ c[0].data, c[1].dirty+" "+c[1].tag + " " + c[1].data))
+    
+    totalRates = cache.cntHits+cache.cntMiss
+    if totalRates > 0:
+      print("- - - - -")
+      totalRates = cache.cntHits+cache.cntMiss
+      hitsRate = (cache.cntHits*100)/totalRates
+      print("Hits rate: {:.2f}% | Miss rate: {:.2f}%".format( hitsRate, 100-hitsRate))
+      print("- - - - -")
 
     if opt in ["1", "2", "3"]:
       if opt == "3":
