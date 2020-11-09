@@ -1,5 +1,5 @@
 from math import log2
-import blockClass as block
+from blockClass import Block as block
 
 class CacheMemory:
   def __init__(self, cntBlocks, blocksSize, cntVias):
