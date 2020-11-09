@@ -12,6 +12,9 @@ def interfaz(cache, mainMemo):
     """)
     opt = input("Digite su opción: ")
 
+    for c in cache.content:
+      print("|{}|{}|".format(c[0].tag+c[0].data, c[1].tag+c[1].data))
+
     if opt in ["1", "2", "3"]:
       if opt == "3":
         Exit = True
