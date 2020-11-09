@@ -45,13 +45,33 @@ class CacheMemory:
             ##Agregar el bloque
             X = int(address.tag+address.index+("0"*len(address.offset)), 2) ##Posiciones del arreglo | Inicio
             Y = int(address.tag+address.index+("1"*len(address.offset)), 2) ##Posiciones del arreglo | Fin
-            dataExtracted = ""
+            dataExtracted = "" #Datos extraidos de la memoria principal
             for i in range(X, Y+1):
               dataExtracted += mainMemo.content[i]
             block.validation = "1"
             block.tag = address.tag
             block.data = dataExtracted
-            self.cola.append([block.tag, pos])
+            self.cola.append([block.tag, address.index])
+            break
+      else:
+        ## No hay espacio, entonces aplicamos la política de FIFO
+        fifo = self.cola.popleft() ## Tomamos el primer elemento que se agregó
+        tag, idx = fifo[0], fifo[1]
+        pos = int(idx, 2)
+
+        ## Posiciones en la memoria principal
+        X = int( tag+idx+("0"*len(address.offset)), 2)
+        Y = int( tag+idx+("1"*len(address.offset)), 2)
+        dataExtracted = "" #Datos extraidos de la memoria principal
+        for i in range(X, Y+1):
+          dataExtracted += mainMemo.content[i]
+        
+        for block in self.content[pos]:
+          if block.tag == tag:
+            ##Como son iguales y están en el mismo indice
+            block.data = dataExtracted
+            block.dirty = "1"
+            self.cola.append([block.tag, idx])
             break
 
   ## Metodo de lectura -> Escribir en la memoria caché con un address
