@@ -1,7 +1,7 @@
 import random
 from blockClass import Block
 
-def interfaz(cache):
+def interfaz(cache, mainMemo):
   Exit = False
   while not Exit:
     print("""
@@ -23,8 +23,8 @@ def interfaz(cache):
         addressString = "{0:011b}".format(addressRandom)
 
         if opt == "1":
-          cache.read(addressString)
+          cache.read(addressString, mainMemo)
         else:
-          cache.write(addressString)
+          cache.write(addressString, mainMemo)
     else:
       print("Opcion incorrecta")
