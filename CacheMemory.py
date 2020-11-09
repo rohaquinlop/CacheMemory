@@ -74,7 +74,52 @@ class CacheMemory:
             self.cola.append([block.tag, idx])
             break
 
-  ## Metodo de lectura -> Escribir en la memoria caché con un address
+  ## Metodo de escritura -> Escribir en la memoria caché con un address
   def write(self, stringAddress, mainMemo):
+    ##Escribir
+
     ##Recibe un objeto de la clase address
     address = Address(stringAddress)
+    pos = int(address.index, 2)
+
+    randomData = random.randint(0, 18446744073709551615)
+    data = "{0:064b}".format(randomData)
+
+    flag = False
+    isSpace = False
+
+    for block in self.content[pos]:
+      ## La bandera significa que encontramos la etiqueta en el conjunto, True si la encontramos, False en caso contrario
+      if block.tag == address.tag:
+        flag = True
+        ## Modificamos en la memoria cache
+        block.data = data
+        block.dirty = "1"
+      if block.validation == "0":
+        isSpace = True
+    
+    if flag == False:
+      if isSpace == True:
+        ## Aun hay espacio y podemos agregar el bloque
+        for block in self.content[pos]:
+          if block.validation == "0":
+            ##Agregar el bloque
+            block.dirty = "1"
+            block.validation = "1"
+            block.tag = address.tag
+            block.data = data
+            self.cola.append([block.tag, address.index])
+            break
+      else:
+        ## No hay espacio, entonces aplicamos la política de FIFO
+        fifo = self.cola.popleft() ## Tomamos el primer elemento que se agregó
+        tag, idx = fifo[0], fifo[1]
+        pos = int(idx, 2)
+
+        for block in self.content[pos]:
+          if block.tag == tag:
+            ##Como son iguales y están en el mismo indice
+            block.data = data
+            block.dirty = "1"
+            self.cola.append([block.tag, idx])
+            break
