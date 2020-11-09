@@ -1,3 +1,4 @@
+import random
 from math import log2
 from collections import deque
 from blockClass import Block
@@ -67,10 +68,15 @@ class CacheMemory:
           dataExtracted += mainMemo.content[i]
         
         for block in self.content[pos]:
-          if block.tag == tag:
+          if block.tag == tag and block.dirty == "0":
             ##Como son iguales y están en el mismo indice
             block.data = dataExtracted
-            block.dirty = "1"
+            self.cola.append([block.tag, idx])
+            break
+          elif block.tag == tag and block.dirty == "1":
+            ##Hay que actualizar main memory
+            block.dirty = "0"
+            mainMemo.updateRAM(X, Y, block.data)
             self.cola.append([block.tag, idx])
             break
 
