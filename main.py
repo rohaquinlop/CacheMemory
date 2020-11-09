@@ -1,5 +1,6 @@
 from interface import interfaz as I
 from CacheMemory import CacheMemory as cacheMem
+from mainMemory import MainMemory
 
 def main():
   """
@@ -8,8 +9,9 @@ def main():
   Número de vías = 2
   """
   cache = cacheMem(16, 8, 2)
+  mainMem = MainMemory()
 
-  I(cache)
+  I(cache, mainMem)
 
 
 main()
